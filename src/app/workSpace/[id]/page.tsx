@@ -3,18 +3,20 @@ import React, { useEffect } from 'react'
 import WorkSpaceSideBar from '@/components/WorkSpaceSideBar'
 import { useParams} from 'next/navigation'
 import SearchBar from '@/components/SearchBar'
-import { IconTable, IconPlus, IconFile, IconChevronDown } from '@tabler/icons-react'
-import { Button,Menu, Drawer, Table, Input} from '@mantine/core'
+import { IconTable, IconPlus, IconFile, IconChevronDown, IconDownload } from '@tabler/icons-react'
+import { Button,Menu, Drawer, Table, Modal} from '@mantine/core'
 import { useSelector } from 'react-redux'
 import CreateTableDrawer from '@/components/CreateTableDrawer'
 import { useDisclosure } from '@mantine/hooks'
 import { useState } from 'react'
+import AddColumnModal from '@/components/AddColumnModal'
 
 const page = () => {
     const {id} = useParams()
     const [opened, { open, close }] = useDisclosure(false);
     const projectId = Number(id)
     const project = useSelector((store) => store.workSpaces.projects.find((project) => project.id === projectId));
+    const [tableId, setTableId] = useState()
 
     const tables = project?.tables
 
@@ -23,6 +25,17 @@ const page = () => {
     }, [tables]);
 
     const [columns, setColumn] = useState([])
+    useEffect(() => {
+        if (tableId) {
+            const currentTable = tables.find(t => t.id === tableId);
+            if (currentTable) {
+                setColumn(currentTable.columns);
+            }
+        }
+    }, [tables, tableId]);
+
+
+   
 
 
     const handleButtonClick = (event) => {
@@ -37,6 +50,7 @@ const page = () => {
         console.log(newColumn)
         setColumn(newColumn)
         console.log(newColumn)
+        setTableId(tableId)
       
     
       };
@@ -119,7 +133,7 @@ const page = () => {
 
            <div className='relative h-14 bg-gray-200 border-b-2 border-white'>
             <div className='absolute right-2 top-2'>
-                <Button color='green'>Generate Code</Button>
+                <Button rightSection={<IconDownload/>} variant='transparent' color='green'>Generate Code</Button>
 
             </div>
            
@@ -134,7 +148,7 @@ const page = () => {
                         <span>{column.name}</span>
                         <Menu shadow="md" width={200}>
                             <Menu.Target>
-                                <Button variant='transparent'><IconChevronDown /></Button>
+                                <Button variant='transparent'><IconChevronDown color='green' size={20}/></Button>
                             </Menu.Target>
 
                         <Menu.Dropdown>
@@ -148,11 +162,13 @@ const page = () => {
                     ))}
                     
                     {columns.length > 0 && (
+                        <div>
+                       
                     <Table.Th key="addButton">
-                        <Button color="green" size='xs' variant='transparent'>
-                        <IconPlus />
-                        </Button>
+                        <AddColumnModal projectId={projectId} id={tableId}/>
                     </Table.Th>
+                        </div>
+                        
                                 )}
                             </tr>
                 </Table.Thead>

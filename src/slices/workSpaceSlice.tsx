@@ -27,12 +27,22 @@ const workSpaceSlice = createSlice({
             }
         },
 
+        createColumn: (state, action) => {
+            const { newColumn, projectId, tableId } = action.payload;
+            const project = state.projects.find(p => p.id === projectId);
+            const table = project?.tables.find(t => t.id === tableId);
+            if (table) {
+                table.columns.push(newColumn);
+            }
+        },
+        
+
     }
         
         
 })
 
 
-export const { createProject, createTable} = workSpaceSlice.actions;
+export const { createColumn,createProject, createTable} = workSpaceSlice.actions;
 
 export default workSpaceSlice.reducer
