@@ -24,8 +24,8 @@ const projects = [
           {
             id : 12,
             name: "status",
-            type: "",
-            default_value: "",
+            type: "number",
+            default_value: "12",
             is_primarykey : false
           },
           {

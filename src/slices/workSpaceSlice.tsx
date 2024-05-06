@@ -20,9 +20,12 @@ const workSpaceSlice = createSlice({
         },
 
         createTable: (state, action) => {
-            const { data, projectId } = action.payload;
-            state.projects[projectId].tables.push(data)
-          },
+            const { newTable, projectId } = action.payload;
+            const project = state.projects.find(p => p.id === projectId);
+            if (project) {
+                project.tables = [...project.tables, newTable];
+            }
+        },
 
     }
         
