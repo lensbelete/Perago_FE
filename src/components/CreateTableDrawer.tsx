@@ -45,11 +45,15 @@ const CreateTableDrawer = ({ isOpen, onClose, projectId }) => {
             id,
             name: data.name,
             description: data.description || "",
-            columns: data.columns.map((column) =>({
-                ...column,
-                is_primarykey: !!column.is_primarykey
+            columns: data.columns.map((column) => ({
+                id: v4(), 
+                name: column.name,
+                type: column.type,
+                defaultValue: column.defaultValue,
+                is_primarykey: column.is_primarykey || false, 
             }))
         }
+    
 
         console.log(newTable)
          dispatch(createTable({newTable, projectId}))

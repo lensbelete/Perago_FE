@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import WorkSpaceSideBar from '@/components/WorkSpaceSideBar'
 import { useParams} from 'next/navigation'
 import SearchBar from '@/components/SearchBar'
@@ -18,24 +18,36 @@ const page = () => {
 
     const tables = project?.tables
 
+    useEffect(() => {
+        console.log('Tables have updated:', tables);
+    }, [tables]);
+
     const [columns, setColumn] = useState([])
 
 
     const handleButtonClick = (event) => {
        
         const buttonId = event.currentTarget.id;
-        const tableId = Number(buttonId)  
-        console.log(typeof(tableId))
+        const tableId = buttonId 
+        
         console.log(`Button with ID ${tableId} was clicked`);
-        const table = tables.find((table) => table.id === tableId)
+        const table = tables.find((table) => table.id == tableId)
 
         const newColumn = table?.columns
+        console.log(newColumn)
         setColumn(newColumn)
+        console.log(newColumn)
       
     
       };
+    useEffect(() => {
+        // console.log('Current columns:', columns);
+      }, [tables]);
+    useEffect(() => {
+        // console.log('Current columns:', columns); // Log to see what's set
+    }, [columns]);
    
-      console.log(columns)
+    //   console.log(columns)
   return (
     <div className='grid-cols-custom'>
 
