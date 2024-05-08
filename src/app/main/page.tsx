@@ -10,12 +10,9 @@ import CreateProjectModal from '@/components/CreateProjectModal'
 import { useDisclosure } from '@mantine/hooks'
 
 const Main = () => {
-
-
- 
-  
-
   const [opened, { open, close }] = useDisclosure(false);
+
+  
   return (
     <div className='flex h-screen'>
       <div className='mr-56'>
@@ -34,9 +31,8 @@ const Main = () => {
               <p className="text-sm text-foreground-light">Start a new Project?</p>
               </div>
               <Modal color="green" opened={opened} onClose={close} title="Create New Project" centered>
-                          <CreateProjectModal isOpen={open} onClose={close}/>
+                <CreateProjectModal isOpen={open} onClose={close}/>
               </Modal>
-
               <Button color="green" onClick={open} rightSection={<IconPlus size={14}/>} className="sm:w-full md:w-auto">New Project</Button>
                   
               </div>

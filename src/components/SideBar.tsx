@@ -1,12 +1,12 @@
 import React from 'react'
 
 import { NavLink,Button } from '@mantine/core'
-import {useSelector,useDispatch } from 'react-redux'
+import {useSelector} from 'react-redux'
 import { IconChevronRight, IconFolder } from '@tabler/icons-react'
 
 
 const SideBar = () => {
-  const dispatch = useDispatch()
+
 
   const {projects} = useSelector((store) => store.workSpaces)
   return (
@@ -27,7 +27,7 @@ const SideBar = () => {
       </div>
 
       <div className='flex justify-center absolute bottom-4 left-4'>
-        <Button color='green' onClick={() => dispatch(clearProject())}>Generate Code</Button>
+        <Button color='green'>Generate Code</Button>
       </div>
 
     </div>

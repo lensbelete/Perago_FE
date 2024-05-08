@@ -15,16 +15,18 @@ const workSpaceSlice = createSlice({
     reducers :{
         createProject : (state, action) => {
             state.projects.push(action.payload)
-            // console.log("i might return something")
+
+            // console.log(action.payload)
 
         },
 
         createTable: (state, action) => {
-            const { newTable, projectId } = action.payload;
-            const projectIndex = state.projects.findIndex(p => p.id === projectId);
-            if (projectIndex !== -1) {
-                state.projects[projectIndex].tables.push(newTable);
-            }
+            const {newTable, projectId} = action.payload;
+
+            const project = state.projects.find((project) => project.id == projectId)
+
+            project?.tables.push(newTable)
+            
         },
 
         createColumn: (state, action) => {

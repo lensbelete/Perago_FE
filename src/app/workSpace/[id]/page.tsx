@@ -1,42 +1,45 @@
 "use client"
-import React, { useEffect } from 'react'
+
 import WorkSpaceSideBar from '@/components/WorkSpaceSideBar'
 import { useParams} from 'next/navigation'
 import SearchBar from '@/components/SearchBar'
 import { IconTable,IconChevronDown, IconDownload } from '@tabler/icons-react'
-import { Button,Menu,Table} from '@mantine/core'
+import { Button,Menu,Table, Drawer} from '@mantine/core'
 import { useSelector } from 'react-redux'
 import CreateTableDrawer from '@/components/CreateTableDrawer'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import AddColumnModal from '@/components/AddColumnModal'
+import { IconPlus } from '@tabler/icons-react';
+import { useDisclosure } from '@mantine/hooks'
+
+
+
 
 const Page = () => {
-    const {id} = useParams()
-    
+    const [opened, { open, close }] = useDisclosure(false);
 
+    
+    const {id} = useParams()
     const projectId = id
 
+    const project = useSelector((store) => store.workSpaces.projects.find((project) => project.id == projectId));
+   
 
-    const project = useSelector((store) => store.workSpaces.projects.find((project) => project.id === projectId));
 
-    const [tableId, setTableId] = useState()
-    const [columns, setColumn] = useState([])
-
-    const tables = project?.tables
+    const selectProjectTables = useSelector((state) => state.workSpaces.projects.find(project => project.id == projectId)?.tables);
 
     useEffect(() => {
-        console.log('Tables have updated:', tables);
-    }, [tables]);
+    }, [selectProjectTables]);
+
+
 
     
-    useEffect(() => {
-        if (tableId) {
-            const currentTable = tables.find(t => t.id === tableId);
-            if (currentTable) {
-                setColumn(currentTable.columns);
-            }
-        }
-    }, [tables, tableId]);
+    const [tableId, setTableId] = useState()
+
+    const [columns, setColumn] = useState([])
+
+    const tables = project?.tables || []
+    console.log(tables)
 
 
    
@@ -46,31 +49,28 @@ const Page = () => {
        
         const buttonId = event.currentTarget.id;
         const tableId = buttonId 
+        setTableId(tableId)
         
         console.log(`Button with ID ${tableId} was clicked`);
+
         const table = tables.find((table) => table.id == tableId)
+        // console.log(table)
 
         const newColumn = table?.columns
-        console.log(newColumn)
         setColumn(newColumn)
-        console.log(newColumn)
-        setTableId(tableId)
-      
+
+        // console.log(newColumn)
     
-      };
-    useEffect(() => {
-        
-      }, [tables]);
-    useEffect(() => {
-    }, [columns]);
-   
-    //   console.log(columns)
+    };
+
+
+    
+
   return (
     <div className='grid-cols-custom'>
 
         <div className='h-screen bg-green-900 border border-r-2'>
             <WorkSpaceSideBar/>
-            
         </div>
 
         <div className='h-screen bg-gray-200 border-r-2 border-white'>
@@ -81,8 +81,18 @@ const Page = () => {
             <div className='justify-center'>
                 <SearchBar />
                 <div className='flex justify-center border border-r-2 border-b-white'>
+                    <Drawer
+                        opened={opened} onClose={close}
+                        position='right'
+                        size="40rem"
+                        title="Create a new table"
+                        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
+                    >
 
-                    <CreateTableDrawer projectId={projectId}/>  
+                        <CreateTableDrawer isOpen={open} onClose={close} projectId={projectId}/>  
+                    </Drawer>
+                    <Button className="mb-4" leftSection={<IconPlus size={14}/>}
+                    color='green' size='xs' onClick={open}>New Table</Button>
                    
                 </div>
 
@@ -131,7 +141,7 @@ const Page = () => {
            
            </div>
            <div>
-           {columns && (
+           {columns && columns.length > 0 && (
             <Table striped highlightOnHover withTableBorder withColumnBorders>
                 <Table.Thead>
                 <tr> 
@@ -153,7 +163,7 @@ const Page = () => {
                     </Table.Th>
                     ))}
                     
-                    {columns.length > 0 && (
+                    {(
                         <div>
                        
                     <Table.Th key="addButton">
