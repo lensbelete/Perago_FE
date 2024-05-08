@@ -1,13 +1,13 @@
 import React from 'react';
-import { Input, Button, Checkbox, Table } from '@mantine/core';
+import { Input, Button, Checkbox, Table, Drawer } from '@mantine/core';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {v4} from "uuid";
 import { useDispatch } from 'react-redux';
 import { createTable } from '@/slices/workSpaceSlice';
-
-
+import { useDisclosure } from '@mantine/hooks';
+import { IconPlus } from '@tabler/icons-react';
 
 const schema = yup.object().shape({
     name: yup.string().required("Name is required"),
@@ -22,8 +22,12 @@ const schema = yup.object().shape({
     )
 });
 
-const CreateTableDrawer = ({ isOpen, onClose, projectId }) => {
+const CreateTableDrawer = ({projectId}) => {
+    const [opened, { open, close }] = useDisclosure(false);
+
     const dispatch = useDispatch()
+
+
     const { register, control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -57,19 +61,29 @@ const CreateTableDrawer = ({ isOpen, onClose, projectId }) => {
 
         console.log(newTable)
          dispatch(createTable({newTable, projectId}))
-        onClose()
+        close()
 
        
     };
 
-    // function to add an array of colums to the field
+    
     const addColumn = () => {
         append({ name: "", type: "", defaultValue:"",is_primarykey: false });
     };
 
     return (
         <div className='relative'>
-            <form onSubmit={handleSubmit(onSubmit)}>
+              <Button className="mb-4" leftSection={<IconPlus size={14}/>}
+                    color='green' size='xs' onClick={open}>New Table</Button>
+            <Drawer
+                        opened={opened} onClose={close}
+                        position='right'
+                        size="40rem"
+                        title="Create a new table"
+                        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
+                    >
+
+<form onSubmit={handleSubmit(onSubmit)}>
                 <div className="px-4 sm:px-6 space-y-10 py-6 border-b-2">
                     <Input.Wrapper label="Name" withAsterisk>
                         <Input placeholder="Name" {...register("name")} />
@@ -132,6 +146,11 @@ const CreateTableDrawer = ({ isOpen, onClose, projectId }) => {
                 </div>
                 
             </form>
+                        
+             </Drawer>
+
+                  
+           
         </div>
     );
 }

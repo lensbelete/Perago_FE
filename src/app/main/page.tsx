@@ -9,7 +9,7 @@ import { Button, Modal } from '@mantine/core'
 import CreateProjectModal from '@/components/CreateProjectModal'
 import { useDisclosure } from '@mantine/hooks'
 
-const main = () => {
+const Main = () => {
 
 
  
@@ -35,7 +35,7 @@ const main = () => {
               </div>
               <Modal color="green" opened={opened} onClose={close} title="Create New Project" centered>
                           <CreateProjectModal isOpen={open} onClose={close}/>
-                    </Modal>
+              </Modal>
 
               <Button color="green" onClick={open} rightSection={<IconPlus size={14}/>} className="sm:w-full md:w-auto">New Project</Button>
                   
@@ -47,4 +47,4 @@ const main = () => {
   )
 }
 
-export default main
+export default Main

@@ -13,8 +13,7 @@ const page = () => {
         <article>
           <h1  className='green_gradient'>Perago</h1>
           <p className='green_gradient'>Work with Ease</p>
-          <a href='/main'><Button color='green' className='green_gradient' >Get Started</Button></a>
-        
+          <a href='/main'><Button color='green' className='green_gradient' >Get Started</Button></a>      
        </article>
         </div>
        

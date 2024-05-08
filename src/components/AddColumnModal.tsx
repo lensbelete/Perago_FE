@@ -34,8 +34,9 @@ const AddColumnModal = ({projectId, id}) => {
             default_value: data.default_value,
             is_primarykey: data.is_primarykey
         }
-        console.log(newColumn)
+        
         dispatch(createColumn({newColumn, projectId, id}))
+        console.log(newColumn)
        
         close()
         

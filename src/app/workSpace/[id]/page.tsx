@@ -3,20 +3,24 @@ import React, { useEffect } from 'react'
 import WorkSpaceSideBar from '@/components/WorkSpaceSideBar'
 import { useParams} from 'next/navigation'
 import SearchBar from '@/components/SearchBar'
-import { IconTable, IconPlus, IconFile, IconChevronDown, IconDownload } from '@tabler/icons-react'
-import { Button,Menu, Drawer, Table, Modal} from '@mantine/core'
+import { IconTable,IconChevronDown, IconDownload } from '@tabler/icons-react'
+import { Button,Menu,Table} from '@mantine/core'
 import { useSelector } from 'react-redux'
 import CreateTableDrawer from '@/components/CreateTableDrawer'
-import { useDisclosure } from '@mantine/hooks'
 import { useState } from 'react'
 import AddColumnModal from '@/components/AddColumnModal'
 
-const page = () => {
+const Page = () => {
     const {id} = useParams()
-    const [opened, { open, close }] = useDisclosure(false);
-    const projectId = Number(id)
+    
+
+    const projectId = id
+
+
     const project = useSelector((store) => store.workSpaces.projects.find((project) => project.id === projectId));
+
     const [tableId, setTableId] = useState()
+    const [columns, setColumn] = useState([])
 
     const tables = project?.tables
 
@@ -24,7 +28,7 @@ const page = () => {
         console.log('Tables have updated:', tables);
     }, [tables]);
 
-    const [columns, setColumn] = useState([])
+    
     useEffect(() => {
         if (tableId) {
             const currentTable = tables.find(t => t.id === tableId);
@@ -55,10 +59,9 @@ const page = () => {
     
       };
     useEffect(() => {
-        // console.log('Current columns:', columns);
+        
       }, [tables]);
     useEffect(() => {
-        // console.log('Current columns:', columns); // Log to see what's set
     }, [columns]);
    
     //   console.log(columns)
@@ -78,16 +81,9 @@ const page = () => {
             <div className='justify-center'>
                 <SearchBar />
                 <div className='flex justify-center border border-r-2 border-b-white'>
-                    <Drawer
-                        opened={opened} onClose={close}
-                        position='right'
-                        size="40rem"
-                        title="Create a new table"
-                        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
-                    >
-                        <CreateTableDrawer isOpen={open} onClose={close} projectId={projectId}/>  
-                    </Drawer>
-                    <Button className="mb-4" leftSection={<IconPlus size={14}/>}color='green' size='xs' onClick={open}>New Table</Button>
+
+                    <CreateTableDrawer projectId={projectId}/>  
+                   
                 </div>
 
 
@@ -96,7 +92,7 @@ const page = () => {
                 {tables?.length > 0 && (
   <div>
     {tables.map((table) => (
-      table && ( // Check if table is not undefined before accessing id
+      table && (
         <Button
           justify="left"
           fullWidth
@@ -115,10 +111,6 @@ const page = () => {
 )}
 
                 </div>
-                
-
-
-            
             </div>
         </div>
 
@@ -174,16 +166,11 @@ const page = () => {
                 </Table.Thead>
             </Table>
             )}
-                    
-            
-
             </div>
-
-
         </div>
     
     </div>
   )
 }
 
-export default page
+export default Page
